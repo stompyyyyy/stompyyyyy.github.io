@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Singson | Contact Card</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-bright: #ffffff;
+      --accent: #58a6ff;
+      --accent-hover: #1f6feb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 420px;
+      width: 100%;
+      padding: 2.2rem 1.8rem;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .avatar-placeholder {
+      width: 84px;
+      height: 84px;
+      background: linear-gradient(135deg, #1f6feb, #238636);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 auto 1.2rem;
+      border: 3px solid var(--border);
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: var(--text-bright);
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+
+    .school {
+      font-size: 0.85rem;
+      color: #8b949e;
+      margin-bottom: 1.8rem;
+    }
+
+    .btn-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #0d1117;
+      font-weight: 600;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--text-bright);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: #8b949e;
+    }
+
+    .footer-link {
+      margin-top: 1.6rem;
+      display: inline-block;
+      font-size: 0.85rem;
+      color: #8b949e;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="avatar-placeholder">KS</div>
+
+    <h1>King Singson</h1>
+    <p class="subtitle">Electrical & Computer Engineering</p>
+    <p class="school">California State University, Los Angeles</p>
+
+    <div class="btn-list">
+      <a href="contact.vcf" download class="btn btn-primary">
+        📥 Save Contact to Phone (.vcf)
+      </a>
+
+      <a href="https://www.linkedin.com/in/kingsingson" target="_blank" rel="noopener" class="btn btn-secondary">
+        🔗 LinkedIn Profile
+      </a>
+
+      <a href="mailto:ksingso@calstatela.edu" class="btn btn-secondary">
+        ✉️ Email Me (Cal State LA)
+      </a>
+
+      <a href="https://github.com/stompyyyyy" target="_blank" rel="noopener" class="btn btn-secondary">
+        💻 GitHub Profile
+      </a>
+
+      <a href="../resume.pdf" target="_blank" class="btn btn-secondary">
+        📄 View Resume (PDF)
+      </a>
+    </div>
+
+    <a href="../" class="footer-link">← Visit Full Portfolio Website</a>
+  </div>
+
+</body>
+</html>
