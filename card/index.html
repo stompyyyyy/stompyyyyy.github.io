@@ -3,23 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>King Singson | Contact Card</title>
+  <title>king@calstatela: ~ (vCard)</title>
+  
   <style>
+    @font-face {
+      font-family: 'DepartureMono';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2409-1@1.0/DepartureMono-Regular.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
-      --bg: #0d1117;
-      --card-bg: #161b22;
+      --bg: #0a0e14;
+      --term-bg: #010409;
+      --titlebar-bg: #0d1117;
       --border: #30363d;
       --text: #c9d1d9;
-      --text-bright: #ffffff;
-      --accent: #58a6ff;
-      --accent-hover: #1f6feb;
+      --dim: #484f58;
+      --green: #3fb950;
+      --cyan: #58a6ff;
+      --amber: #d29922;
+      --white: #f0f6fc;
+      --font-mono: 'DepartureMono', monospace;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--font-mono);
+      -webkit-font-smoothing: none;
+      text-rendering: geometricPrecision;
     }
 
     body {
@@ -29,143 +44,270 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 1.5rem;
+      padding: 1rem;
+      position: relative;
     }
 
-    .card {
-      background: var(--card-bg);
+    /* Subtle CRT scanline overlay */
+    /*body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0.6;
+    } */
+
+    .terminal-window {
+      background: var(--term-bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      max-width: 420px;
+      border-radius: 6px;
       width: 100%;
-      padding: 2.2rem 1.8rem;
-      text-align: center;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      max-width: 480px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+      position: relative;
     }
 
-    .avatar-placeholder {
-      width: 84px;
-      height: 84px;
-      background: linear-gradient(135deg, #1f6feb, #238636);
-      color: white;
-      border-radius: 50%;
+    .titlebar {
+      background: var(--titlebar-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 0 auto 1.2rem;
-      border: 3px solid var(--border);
+      justify-content: space-between;
+      user-select: none;
     }
 
-    h1 {
-      font-size: 1.6rem;
-      color: var(--text-bright);
-      margin-bottom: 0.3rem;
-      font-weight: 600;
+    .window-controls {
+      display: flex;
+      gap: 6px;
     }
 
-    .subtitle {
-      font-size: 0.95rem;
-      color: var(--accent);
-      margin-bottom: 0.4rem;
-      font-weight: 500;
+    .control-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+    }
+    .dot-red { background: #f85149; }
+    .dot-yellow { background: #e3b341; }
+    .dot-green { background: #2ea043; }
+
+    .titlebar-text {
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: 0.5px;
     }
 
-    .school {
-      font-size: 0.85rem;
-      color: #8b949e;
-      margin-bottom: 1.8rem;
+    .status-tag {
+      font-size: 11px;
+      color: var(--green);
     }
 
-    .btn-list {
+    .terminal-content {
+      padding: 1.4rem 1.2rem;
+    }
+
+    .log-line {
+      font-size: 11px;
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+
+    .c-dim { color: var(--dim); }
+    .c-green { color: var(--green); }
+    .c-cyan { color: var(--cyan); }
+    .c-amber { color: var(--amber); }
+    .c-white { color: var(--white); }
+
+    .sys-header {
+      border-left: 2px solid var(--cyan);
+      padding-left: 10px;
+      margin-bottom: 1.4rem;
+    }
+
+    .sys-name {
+      font-size: 17px;
+      color: var(--white);
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .sys-sub {
+      font-size: 11px;
+      color: var(--cyan);
+      margin-top: 2px;
+    }
+
+    .sys-meta {
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 2px;
+    }
+
+    .sys-bio {
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .menu-header {
+      font-size: 11px;
+      color: var(--dim);
+      margin-bottom: 0.6rem;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 4px;
+    }
+
+    .menu-options {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.45rem;
+      margin-bottom: 1.6rem;
     }
 
-    .btn {
+    .cli-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 0.85rem 1rem;
-      border-radius: 10px;
+      background: rgba(88, 166, 255, 0.04);
+      border: 1px solid rgba(88, 166, 255, 0.25);
+      padding: 0.65rem 0.85rem;
       text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
+      font-size: 11px;
+      color: var(--white);
+      border-radius: 3px;
+      transition: all 0.12s ease-in-out;
     }
 
-    .btn-primary {
-      background-color: var(--accent);
-      color: #0d1117;
-      font-weight: 600;
-      border: 1px solid var(--accent);
+    .cli-btn .index {
+      color: var(--cyan);
+      margin-right: 12px;
+      user-select: none;
+      transition: color 0.12s ease-in-out;
     }
 
-    .btn-primary:hover {
-      background-color: var(--accent-hover);
-      color: #ffffff;
+    .cli-btn .label {
+      flex: 1;
+      color: var(--white);
+      transition: color 0.12s ease-in-out;
     }
 
-    .btn-secondary {
-      background-color: transparent;
-      color: var(--text-bright);
-      border: 1px solid var(--border);
+    .cli-btn .indicator {
+      color: var(--cyan);
+      transition: all 0.12s ease-in-out;
     }
 
-    .btn-secondary:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-color: #8b949e;
+    /* Unified Green Hover State */
+    .cli-btn:hover {
+      background: rgba(63, 185, 80, 0.12);
+      border-color: var(--green);
     }
 
-    .footer-link {
-      margin-top: 1.6rem;
+    .cli-btn:hover .index,
+    .cli-btn:hover .label,
+    .cli-btn:hover .indicator {
+      color: var(--green);
+    }
+
+    .cli-btn:hover .indicator {
+      transform: translateX(4px);
+    }
+
+    .prompt-footer {
+      display: flex;
+      align-items: center;
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 0.8rem;
+    }
+
+    .cursor {
       display: inline-block;
-      font-size: 0.85rem;
-      color: #8b949e;
-      text-decoration: none;
-      transition: color 0.2s;
+      width: 7px;
+      height: 12px;
+      background-color: var(--green);
+      margin-left: 6px;
+      animation: blink 1s step-start infinite;
+      vertical-align: middle;
     }
 
-    .footer-link:hover {
-      color: var(--accent);
+    @keyframes blink {
+      50% { opacity: 0; }
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="avatar-placeholder">KS</div>
-
-    <h1>King Singson</h1>
-    <p class="subtitle">Electrical & Computer Engineering</p>
-    <p class="school">California State University, Los Angeles</p>
-
-    <div class="btn-list">
-      <a href="contact.vcf" download class="btn btn-primary">
-        📥 Save Contact to Phone (.vcf)
-      </a>
-
-      <a href="https://www.linkedin.com/in/kingsingson" target="_blank" rel="noopener" class="btn btn-secondary">
-        🔗 LinkedIn Profile
-      </a>
-
-      <a href="mailto:ksingso@calstatela.edu" class="btn btn-secondary">
-        ✉️ Email Me (Cal State LA)
-      </a>
-
-      <a href="https://github.com/stompyyyyy" target="_blank" rel="noopener" class="btn btn-secondary">
-        💻 GitHub Profile
-      </a>
-
-      <a href="../resume.pdf" target="_blank" class="btn btn-secondary">
-        📄 View Resume (PDF)
-      </a>
+  <div class="terminal-window">
+    <div class="titlebar">
+      <div class="window-controls">
+        <span class="control-dot dot-red"></span>
+        <span class="control-dot dot-yellow"></span>
+        <span class="control-dot dot-green"></span>
+      </div>
+      <div class="titlebar-text">tty1 &mdash; king@calstatela</div>
+      <div class="status-tag">[ONLINE]</div>
     </div>
 
-    <a href="../" class="footer-link">← Visit Full Portfolio Website</a>
+    <div class="terminal-content">
+      <div class="sys-header">
+        <div class="sys-name">KING SINGSON</div>
+        <div class="sys-sub">&gt; Electrical &amp; Computer Engineering</div>
+        <div class="sys-meta">California State University, Los Angeles</div>
+        
+        <div class="sys-bio">
+          FOCUS: Embedded Systems &bull; Digital Design &bull; Robotics<br>
+          STATUS: BS Candidate (Computer Engineering)
+        </div>
+      </div>
+
+      <div class="menu-header">// DIRECT LINKS</div>
+
+      <div class="menu-options">
+        <a href="contact.vcf" download class="cli-btn">
+          <span class="index">[1]</span>
+          <span class="label">contact information (.vcf)</span>
+          <span class="indicator">&rarr;</span>
+        </a>
+
+        <a href="https://www.linkedin.com/in/kingsingson" target="_blank" rel="noopener" class="cli-btn">
+          <span class="index">[2]</span>
+          <span class="label">linkedin</span>
+          <span class="indicator">&rarr;</span>
+        </a>
+
+        <a href="mailto:ksingso@calstatela.edu" class="cli-btn">
+          <span class="index">[3]</span>
+          <span class="label">email</span>
+          <span class="indicator">&rarr;</span>
+        </a>
+
+        <a href="https://github.com/stompyyyyy" target="_blank" rel="noopener" class="cli-btn">
+          <span class="index">[4]</span>
+          <span class="label">github</span>
+          <span class="indicator">&rarr;</span>
+        </a>
+
+        <a href="../resume.pdf" target="_blank" class="cli-btn">
+          <span class="index">[5]</span>
+          <span class="label">resume (.pdf)</span>
+          <span class="indicator">&rarr;</span>
+        </a>
+      </div>
+
+      <div class="prompt-footer">
+        <span>guest@terminal:~$ select [1-5]</span>
+        <span class="cursor"></span>
+      </div>
+    </div>
   </div>
 
 </body>
