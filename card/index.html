@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows Terminal Preview</title>
+  <title>Windows Terminal</title>
 
   <style>
     @font-face {
@@ -17,12 +17,13 @@
     :root {
       --bg: #0c0c0c;
       --win-bg: #0c0c0c;
-      --tab-bg: #1f1f1f;
-      --titlebar-bg: #2d2d2d;
-      --border: #3b3b3b;
+      --tab-active: #0c0c0c;
+      --titlebar-bg: #1f1f1f;
+      --border: rgba(255, 255, 255, 0.12);
+      --btn-border: #333942;
       --text: #cccccc;
       --dim: #767676;
-      --gold: #ffc72c; /* Fixed: single hash */
+      --gold: #ffc72c;
       --green: #13a10e;
       --white: #ffffff;
       --font-mono: 'DepartureMono', Consolas, monospace;
@@ -38,7 +39,7 @@
     }
 
     body {
-      background-color: #1a1a1a;
+      background-color: #121212;
       color: var(--text);
       display: flex;
       justify-content: center;
@@ -47,75 +48,100 @@
       padding: 1rem;
     }
 
-    /* Windows Terminal Frame */
+    /* Windows 11 Rounded Window Frame */
     .win-terminal {
       background: var(--win-bg);
       border: 1px solid var(--border);
-      border-radius: 0;
+      border-radius: 8px;
       width: 100%;
       max-width: 480px;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85);
       overflow: hidden;
     }
 
-    /* Windows Tab & Title Bar */
+    /* Windows 11 Tab & Title Bar */
     .win-titlebar {
       background: var(--titlebar-bg);
-      height: 34px;
+      height: 38px;
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
       user-select: none;
-      border-bottom: 1px solid var(--border);
+      padding: 0 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .tab-group {
       display: flex;
       align-items: flex-end;
+      gap: 3px;
       height: 100%;
-      padding-left: 6px;
+      padding-top: 5px;
     }
 
+    /* Curvy Win11 Active Tab */
     .tab {
-      background: var(--win-bg);
+      background: var(--tab-active);
       color: var(--white);
-      height: 28px;
-      padding: 0 12px;
+      height: 32px;
+      padding: 0 10px;
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 11px;
-      border-top: 1px solid var(--border);
-      border-left: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--win-bg);
-      margin-bottom: -1px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-bottom: none;
     }
 
-    .tab-icon {
-      font-size: 11px;
-      color: var(--gold);
+    /* Mini cmd prompt icon frame */
+    .tab-cmd-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      font-size: 7px;
+      line-height: 1;
+      border-radius: 2px;
+      color: #ffffff;
+      padding-bottom: 1px;
     }
 
     .tab-close {
       color: var(--dim);
       font-size: 11px;
-      margin-left: 4px;
+      margin-left: 6px;
       cursor: default;
+      transition: color 0.1s;
     }
 
-    .tab-new {
-      padding: 0 8px;
-      color: var(--text);
+    .tab-close:hover {
+      color: var(--white);
+    }
+
+    .tab-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: #999999;
       font-size: 12px;
-      line-height: 28px;
+      padding: 0 6px;
+      height: 32px;
       cursor: default;
     }
 
-    /* Windows Native Window Controls */
+    .tab-actions span:hover {
+      color: var(--white);
+    }
+
+    /* Windows 11 Fluent Window Controls */
     .win-controls {
       display: flex;
       height: 100%;
+      align-items: center;
     }
 
     .win-btn {
@@ -125,21 +151,30 @@
       align-items: center;
       justify-content: center;
       color: var(--text);
-      font-size: 10px;
+      font-size: 11px;
       cursor: default;
       transition: background-color 0.1s;
     }
 
+    .win-btn svg {
+      width: 10px;
+      height: 10px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.1;
+    }
+
     .win-btn:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.08);
+      color: var(--white);
     }
 
     .win-btn.close:hover {
-      background-color: #e81123;
+      background-color: #c42b1c;
       color: #ffffff;
     }
 
-    /* Terminal Console Canvas */
+    /* Terminal Body */
     .terminal-body {
       padding: 1.4rem 1.2rem;
     }
@@ -180,7 +215,7 @@
       font-size: 11px;
       color: var(--dim);
       margin-bottom: 0.6rem;
-      border-bottom: 1px dashed var(--border);
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
       padding-bottom: 4px;
     }
 
@@ -191,16 +226,17 @@
       margin-bottom: 1.6rem;
     }
 
+    /* Buttons: Resting Subtle Grey, Gold Numbers, Green Hover */
     .cli-btn {
       display: flex;
       align-items: center;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid #333942;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--btn-border);
       padding: 0.65rem 0.85rem;
       text-decoration: none;
       font-size: 11px;
       color: var(--white);
-      border-radius: 0;
+      border-radius: 4px;
       transition: all 0.12s ease-in-out;
     }
 
@@ -218,11 +254,10 @@
     }
 
     .cli-btn .indicator {
-      color: #6e7681; /* subtle grey arrow */
+      color: #6e7681;
       transition: all 0.12s ease-in-out;
     }
 
-    /* Crisp Green Hover */
     .cli-btn:hover {
       background: rgba(19, 161, 14, 0.12);
       border-color: var(--green);
@@ -244,7 +279,7 @@
       font-size: 11px;
       color: var(--dim);
       margin-top: 1rem;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding-top: 0.8rem;
     }
 
@@ -266,21 +301,29 @@
 <body>
 
   <div class="win-terminal">
-    <!-- Windows Terminal Bar -->
+    <!-- Windows 11 Titlebar: Curved Tab + Command Prompt + Add/Dropdown + Controls -->
     <div class="win-titlebar">
       <div class="tab-group">
         <div class="tab">
-          <span class="tab-icon">&gt;_</span>
-          <span>cmd</span>
+          <span class="tab-cmd-icon">c:&#95;</span>
+          <span>Command Prompt</span>
           <span class="tab-close">&#10005;</span>
         </div>
-        <div class="tab-new">+</div>
+        <div class="tab-actions">
+          <span>+</span>
+        </div>
       </div>
 
       <div class="win-controls">
-        <div class="win-btn minimize">&#8722;</div>
-        <div class="win-btn maximize">&#9633;</div>
-        <div class="win-btn close">&#10005;</div>
+        <div class="win-btn">
+          <svg viewBox="0 0 10 10"><line x1="0" y1="5" x2="10" y2="5"/></svg>
+        </div>
+        <div class="win-btn">
+          <svg viewBox="0 0 10 10"><rect x="0.5" y="0.5" width="9" height="9"/></svg>
+        </div>
+        <div class="win-btn close">
+          <svg viewBox="0 0 10 10"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
+        </div>
       </div>
     </div>
 
